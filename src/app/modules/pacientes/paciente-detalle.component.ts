@@ -14,14 +14,14 @@ import { PacienteDetalleDTO, CitaDTO }     from '../../core/models/api.models';
 } @else if (p) {
 <div class="page fade-in">
 
-  <div style="display:flex;align-items:center;gap:12px;margin-bottom:22px">
+  <div style="display:flex;align-items:center;gap:12px;margin-bottom:22px;flex-wrap:wrap">
     <a class="btn btn-ghost btn-sm btn-icon" routerLink="/pacientes">
       <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
     </a>
     <div class="av av-lg" [class.av-blue]="p.sexo === 'F'" [class.av-green]="p.sexo === 'M'">
       {{ p.nombre[0] }}{{ p.apellidoPaterno[0] }}
     </div>
-    <div style="flex:1">
+    <div style="flex:1;min-width:0">
       <h1 style="font-size:1.2rem">{{ p.nombre }} {{ p.apellidoPaterno }} {{ p.apellidoMaterno }}</h1>
       <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:3px">
         <span class="chip">{{ p.folio }}</span>
@@ -30,7 +30,7 @@ import { PacienteDetalleDTO, CitaDTO }     from '../../core/models/api.models';
         @if (tieneAlergia) { <span class="badge b-red">⚠ {{ p.alergias }}</span> }
       </div>
     </div>
-    <div style="display:flex;gap:8px">
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
       <a class="btn btn-secondary btn-sm" routerLink="/citas">
         <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
         Nueva cita

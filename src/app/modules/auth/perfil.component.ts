@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ApiService } from '../../core/services/api.service';
 import { AuthService } from '../../core/services/auth.service';
+import { ToastService } from '../../core/services/toast.service';
 import { UsuarioAdminDTO } from '../../core/models/api.models';
 
 @Component({
@@ -60,7 +61,7 @@ export class PerfilComponent implements OnInit {
     return ((p[0]?.[0] ?? '') + (p[1]?.[0] ?? '')).toUpperCase() || 'U';
   }
 
-  constructor(private api: ApiService, public auth: AuthService) {}
+  constructor(private api: ApiService, public auth: AuthService, private toast: ToastService) {}
 
   ngOnInit() {
     this.api.getMe().subscribe({ next: p => this.perfil = p });
@@ -73,11 +74,15 @@ export class PerfilComponent implements OnInit {
     this.guardando = true; this.msgPwd = '';
     this.api.cambiarPasswordPropia(this.pwd).subscribe({
       next: () => {
-        this.errorPwd = false; this.msgPwd = 'Contraseña actualizada correctamente';
+        this.errorPwd = false; this.msgPwd = '';
         this.pwd = { passwordActual: '', nuevaPassword: '' }; this.guardando = false;
+        this.toast.success('Contraseña actualizada correctamente');
       },
       error: (e) => {
-        this.errorPwd = true; this.msgPwd = e?.error?.message ?? 'Error al actualizar'; this.guardando = false;
+        this.errorPwd = true;
+        this.msgPwd = e?.error?.message ?? 'Error al actualizar';
+        this.toast.error(this.msgPwd);
+        this.guardando = false;
       },
     });
   }

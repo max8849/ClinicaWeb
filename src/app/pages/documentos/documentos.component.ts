@@ -13,6 +13,7 @@ import { PacienteDetalleDTO, UsuarioDTO } from '../../core/models/api.models';
   styles: [`
     /* ── Pantalla ── */
     .doc-grid { display:grid; grid-template-columns:280px 1fr; gap:20px; align-items:start; }
+    @media(max-width:900px) { .doc-grid { grid-template-columns:1fr; } }
     .doc-list { display:flex; flex-direction:column; gap:6px; }
     .doc-item {
       display:flex; align-items:center; gap:10px; padding:12px 14px;

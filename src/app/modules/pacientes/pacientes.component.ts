@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule }      from '@angular/common';
-import { RouterModule }      from '@angular/router';
+import { RouterModule, ActivatedRoute } from '@angular/router';
 import { FormsModule }       from '@angular/forms';
 import { ApiService }        from '../../core/services/api.service';
+import { ToastService }      from '../../core/services/toast.service';
 import { PacienteListDTO, PacienteCreateDTO } from '../../core/models/api.models';
 
 @Component({
@@ -25,12 +26,12 @@ import { PacienteListDTO, PacienteCreateDTO } from '../../core/models/api.models
     </div>
   </div>
 
-  <div style="display:flex;gap:10px;margin-bottom:18px">
-    <div class="search" style="flex:1;max-width:340px">
+  <div class="filtros-row">
+    <div class="search" style="flex:1;min-width:200px">
       <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
       <input class="fc" placeholder="Buscar nombre, folio o teléfono…" [(ngModel)]="q" (ngModelChange)="buscar()">
     </div>
-    <select class="fc" style="width:150px" [(ngModel)]="fSexo" (ngModelChange)="buscar()">
+    <select class="fc" style="min-width:130px;flex:1;max-width:180px" [(ngModel)]="fSexo" (ngModelChange)="buscar()">
       <option value="">Todos</option>
       <option value="F">Femenino</option>
       <option value="M">Masculino</option>
@@ -186,9 +187,13 @@ export class PacientesComponent implements OnInit {
 
   np: PacienteCreateDTO = { nombre:'', apellidoPaterno:'', fechaNacimiento:'', sexo:'F', telefono:'' };
 
-  constructor(private api: ApiService) {}
+  constructor(private api: ApiService, private toast: ToastService, private route: ActivatedRoute) {}
 
-  ngOnInit(): void { this.buscar(); }
+  ngOnInit(): void {
+    const q = this.route.snapshot.queryParamMap.get('q');
+    if (q) this.q = q;
+    this.buscar();
+  }
 
   buscar(): void {
     this.cargando = true;
@@ -219,8 +224,15 @@ export class PacientesComponent implements OnInit {
     this.guardando  = true;
     this.errorModal = '';
     this.api.createPaciente(this.np).subscribe({
-      next: () => { this.modal = false; this.guardando = false; this.page = 1; this.buscar(); },
-      error: (e) => { this.errorModal = e?.error?.message ?? 'Error al registrar paciente'; this.guardando = false; },
+      next: () => {
+        this.modal = false; this.guardando = false; this.page = 1; this.buscar();
+        this.toast.success('Paciente registrado correctamente');
+      },
+      error: (e) => {
+        this.errorModal = e?.error?.message ?? 'Error al registrar paciente';
+        this.toast.error(this.errorModal);
+        this.guardando = false;
+      },
     });
   }
 

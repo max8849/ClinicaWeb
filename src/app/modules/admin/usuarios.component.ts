@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ApiService } from '../../core/services/api.service';
 import { AuthService } from '../../core/services/auth.service';
+import { ToastService } from '../../core/services/toast.service';
 import { UsuarioAdminDTO, UsuarioCreateDTO, UsuarioUpdateDTO } from '../../core/models/api.models';
 
 @Component({
@@ -218,7 +219,7 @@ export class UsuariosComponent implements OnInit {
     especialidad: null, cedula: null, activo: true,
   };
 
-  constructor(private api: ApiService, public auth: AuthService) {}
+  constructor(private api: ApiService, public auth: AuthService, private toast: ToastService) {}
 
   ngOnInit() { this.buscar(); }
 
@@ -264,13 +265,13 @@ export class UsuariosComponent implements OnInit {
     if (this.editando && this.usuarioSeleccionado) {
       const dto: UsuarioUpdateDTO = { ...this.form };
       this.api.updateUsuario(this.usuarioSeleccionado.id, dto).subscribe({
-        next: () => { this.modal = false; this.guardando = false; this.buscar(); },
-        error: (e) => { this.errorModal = e?.error?.message ?? 'Error al actualizar'; this.guardando = false; },
+        next: () => { this.modal = false; this.guardando = false; this.buscar(); this.toast.success('Usuario actualizado correctamente'); },
+        error: (e) => { this.errorModal = e?.error?.message ?? 'Error al actualizar'; this.toast.error(this.errorModal); this.guardando = false; },
       });
     } else {
       this.api.createUsuario(this.form).subscribe({
-        next: () => { this.modal = false; this.guardando = false; this.buscar(); },
-        error: (e) => { this.errorModal = e?.error?.message ?? 'Error al crear usuario'; this.guardando = false; },
+        next: () => { this.modal = false; this.guardando = false; this.buscar(); this.toast.success('Usuario creado correctamente'); },
+        error: (e) => { this.errorModal = e?.error?.message ?? 'Error al crear usuario'; this.toast.error(this.errorModal); this.guardando = false; },
       });
     }
   }
@@ -279,14 +280,20 @@ export class UsuariosComponent implements OnInit {
     if (this.nuevaPassword.length < 8) { this.errorModal = 'Mínimo 8 caracteres'; return; }
     this.guardando = true; this.errorModal = '';
     this.api.resetPassword(this.usuarioSeleccionado!.id, { nuevaPassword: this.nuevaPassword }).subscribe({
-      next: () => { this.modalReset = false; this.guardando = false; },
-      error: (e) => { this.errorModal = e?.error?.message ?? 'Error al restablecer'; this.guardando = false; },
+      next: () => { this.modalReset = false; this.guardando = false; this.toast.success('Contraseña restablecida correctamente'); },
+      error: (e) => { this.errorModal = e?.error?.message ?? 'Error al restablecer'; this.toast.error(this.errorModal); this.guardando = false; },
     });
   }
 
   toggleActivo(u: UsuarioAdminDTO) {
     const obs = u.activo ? this.api.desactivarUsuario(u.id) : this.api.activarUsuario(u.id);
-    obs.subscribe({ next: updated => { u.activo = updated.activo; } });
+    obs.subscribe({
+      next: updated => {
+        u.activo = updated.activo;
+        this.toast.success(u.activo ? `${u.nombreCompleto} activado` : `${u.nombreCompleto} desactivado`);
+      },
+      error: () => this.toast.error('No se pudo cambiar el estado del usuario'),
+    });
   }
 
   closeOnBackdrop(e: MouseEvent) {

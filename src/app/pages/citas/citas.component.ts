@@ -3,6 +3,7 @@ import { CommonModule }                  from '@angular/common';
 import { RouterModule }                  from '@angular/router';
 import { FormsModule }                   from '@angular/forms';
 import { ApiService }                    from '../../core/services/api.service';
+import { ToastService }                  from '../../core/services/toast.service';
 import { CitaDTO, CitaCreateDTO, PacienteListDTO, UsuarioDTO } from '../../core/models/api.models';
 
 @Component({
@@ -93,13 +94,13 @@ import { CitaDTO, CitaCreateDTO, PacienteListDTO, UsuarioDTO } from '../../core/
   </div>
 
   <!-- Filtros -->
-  <div style="display:flex;gap:10px;margin-bottom:18px;flex-wrap:wrap">
-    <div class="search" style="flex:1;max-width:300px">
+  <div class="filtros-row">
+    <div class="search" style="flex:1;min-width:180px">
       <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
       <input class="fc" placeholder="Buscar paciente…" [(ngModel)]="q" (ngModelChange)="buscar()">
     </div>
-    <input type="date" class="fc" style="width:170px" [(ngModel)]="fFecha" (ngModelChange)="buscar()">
-    <select class="fc" style="width:170px" [(ngModel)]="fEstado" (ngModelChange)="buscar()">
+    <input type="date" class="fc" style="min-width:140px;flex:1" [(ngModel)]="fFecha" (ngModelChange)="buscar()">
+    <select class="fc" style="min-width:140px;flex:1" [(ngModel)]="fEstado" (ngModelChange)="buscar()">
       <option value="">Todos los estados</option>
       <option value="programada">Programada</option>
       <option value="confirmada">Confirmada</option>
@@ -108,7 +109,7 @@ import { CitaDTO, CitaCreateDTO, PacienteListDTO, UsuarioDTO } from '../../core/
       <option value="cancelada">Cancelada</option>
       <option value="no_asistio">No asistió</option>
     </select>
-    <select class="fc" style="width:200px" [(ngModel)]="fMedico" (ngModelChange)="buscar()">
+    <select class="fc" style="min-width:160px;flex:1" [(ngModel)]="fMedico" (ngModelChange)="buscar()">
       <option value="0">Todos los odontólogos</option>
       @for (m of medicos; track m.id) {
         <option [value]="m.id">Dr. {{ m.nombreCompleto }}</option>
@@ -464,7 +465,7 @@ export class CitasComponent implements OnInit {
   }
   clearMedico(): void { this.nueva.medicoId = 0; this.qMedico = ''; this.showDropMed = false; }
 
-  constructor(private api: ApiService) {}
+  constructor(private api: ApiService, private toast: ToastService) {}
 
   ngOnInit(): void {
     this.diaActual = new Date().toISOString().split('T')[0];
@@ -548,7 +549,9 @@ export class CitasComponent implements OnInit {
       next: updated => {
         c.estado = updated.estado;
         this.bc.postMessage({ tipo: 'estado' });
+        this.toast.success(`Estado actualizado: ${this.labelEstado(estado)}`);
       },
+      error: () => this.toast.error('No se pudo actualizar el estado'),
     });
   }
 
@@ -572,9 +575,14 @@ export class CitasComponent implements OnInit {
     this.guardando  = true;
     this.errorModal = '';
     this.api.createCita(this.nueva).subscribe({
-      next: () => { this.modal = false; this.guardando = false; this.buscar(); this.cargarDia(); },
+      next: () => {
+        this.modal = false; this.guardando = false;
+        this.buscar(); this.cargarDia();
+        this.toast.success('Cita agendada correctamente');
+      },
       error: (e) => {
         this.errorModal = e?.error?.message ?? 'Error al agendar la cita';
+        this.toast.error(this.errorModal);
         this.guardando  = false;
       },
     });

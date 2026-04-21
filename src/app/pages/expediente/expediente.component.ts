@@ -3,6 +3,7 @@ import { CommonModule }                 from '@angular/common';
 import { RouterModule, ActivatedRoute } from '@angular/router';
 import { FormsModule }                  from '@angular/forms';
 import { ApiService }                   from '../../core/services/api.service';
+import { ToastService }                 from '../../core/services/toast.service';
 import {
   ExpedienteDTO, PacienteDetalleDTO,
   NotaEvolucionDTO, NotaCreateDTO,
@@ -15,11 +16,21 @@ import {
   standalone: true,
   imports: [CommonModule, RouterModule, FormsModule],
   styles: [`
-    .tab-btn { padding:6px 14px; border:none; background:transparent; border-radius:6px; font-family:var(--font); font-size:.83rem; cursor:pointer; color:var(--g500); transition:all .15s; }
+    .tab-btn { padding:6px 14px; border:none; background:transparent; border-radius:6px; font-family:var(--font); font-size:.83rem; cursor:pointer; color:var(--g500); transition:all .15s; min-height:36px; }
     .tab-btn.on { background:var(--white); color:var(--primary); font-weight:500; box-shadow:var(--sh); }
-    .soap { background:var(--g50); border-radius:var(--r); padding:12px; }
+    .soap { background:var(--g50); border-radius:var(--r); padding:12px; border:1px solid var(--border); }
     .soap-tag { font-size:.67rem; font-weight:700; text-transform:uppercase; letter-spacing:.08em; margin-bottom:6px; }
     .dental-note { font-size:.78rem; color:var(--g500); font-style:italic; margin-top:4px; }
+    .exp-layout { display:grid; grid-template-columns:280px 1fr; gap:18px; align-items:start; }
+    .exp-header { display:flex; align-items:center; gap:12px; margin-bottom:22px; flex-wrap:wrap; }
+    .exp-header-info { flex:1; min-width:0; }
+    .exp-header-actions { display:flex; gap:8px; flex-wrap:wrap; }
+    @media(max-width:900px) {
+      .exp-layout { grid-template-columns:1fr; }
+      .exp-header { gap:10px; }
+      .exp-header-actions { width:100%; }
+      .exp-header-actions .btn { flex:1; justify-content:center; }
+    }
   `],
   template: `
 @if (cargando) {
@@ -28,14 +39,14 @@ import {
 <div class="page fade-in">
 
   <!-- Header -->
-  <div style="display:flex;align-items:center;gap:12px;margin-bottom:22px">
+  <div class="exp-header">
     <a class="btn btn-ghost btn-sm btn-icon" routerLink="/pacientes">
       <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
     </a>
     <div class="av av-lg" [class.av-blue]="pac.sexo === 'F'" [class.av-green]="pac.sexo === 'M'">
       {{ pac.nombre[0] }}{{ pac.apellidoPaterno[0] }}
     </div>
-    <div style="flex:1">
+    <div class="exp-header-info">
       <h1 style="font-size:1.2rem">{{ pac.nombre }} {{ pac.apellidoPaterno }} {{ pac.apellidoMaterno }}</h1>
       <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:3px">
         <span class="chip">{{ pac.folio }}</span>
@@ -44,7 +55,7 @@ import {
         @if (tieneAlergia) { <span class="badge b-red">⚠ {{ pac.alergias }}</span> }
       </div>
     </div>
-    <div style="display:flex;gap:8px">
+    <div class="exp-header-actions">
       <a class="btn btn-ghost btn-sm" [routerLink]="['/documentos']" [queryParams]="{pacienteId: pac.id}" title="Imprimir documentos">
         <svg viewBox="0 0 24 24"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
         Documentos
@@ -60,7 +71,7 @@ import {
     </div>
   </div>
 
-  <div style="display:grid;grid-template-columns:280px 1fr;gap:18px;align-items:start">
+  <div class="exp-layout">
 
     <!-- Ficha -->
     <div style="display:flex;flex-direction:column;gap:12px">
@@ -392,7 +403,7 @@ export class ExpedienteComponent implements OnInit {
     return this.medicos.find(m => m.id === this.nn.medicoId)?.cedula ?? '';
   }
 
-  constructor(private api: ApiService, private route: ActivatedRoute) {}
+  constructor(private api: ApiService, private route: ActivatedRoute, private toast: ToastService) {}
 
   ngOnInit(): void {
     const id = +(this.route.snapshot.paramMap.get('id') ?? 0);
@@ -425,8 +436,13 @@ export class ExpedienteComponent implements OnInit {
         this.guardandoNota = false;
         this.nn = { medicoId: 0, motivoConsulta: '', exploracionFisica: '', diagnostico: '', plan: '' };
         this.imcVal = undefined;
+        this.toast.success('Nota de evolución guardada');
       },
-      error: (e) => { this.errorNota = e?.error?.message ?? 'Error al guardar nota'; this.guardandoNota = false; },
+      error: (e) => {
+        this.errorNota = e?.error?.message ?? 'Error al guardar nota';
+        this.toast.error(this.errorNota);
+        this.guardandoNota = false;
+      },
     });
   }
 
@@ -453,8 +469,13 @@ export class ExpedienteComponent implements OnInit {
         this.modalReceta     = false;
         this.guardandoReceta = false;
         this.nr = { medicoId: 0, diagnostico: '', indicaciones: '', medicamentos: [this.medVacio()] };
+        this.toast.success('Receta emitida correctamente');
       },
-      error: (e) => { this.errorReceta = e?.error?.message ?? 'Error al emitir receta'; this.guardandoReceta = false; },
+      error: (e) => {
+        this.errorReceta = e?.error?.message ?? 'Error al emitir receta';
+        this.toast.error(this.errorReceta);
+        this.guardandoReceta = false;
+      },
     });
   }
 
