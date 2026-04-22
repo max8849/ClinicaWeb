@@ -10,6 +10,29 @@ import { UsuarioAdminDTO, UsuarioCreateDTO, UsuarioUpdateDTO } from '../../core/
   selector: 'app-usuarios',
   standalone: true,
   imports: [CommonModule, FormsModule],
+  styles: [`
+    .m-usr-card {
+      background: var(--white); border: 1px solid var(--border);
+      border-radius: var(--rl); padding: 14px 16px;
+    }
+    .m-usr-head { display:flex; align-items:center; gap:10px; margin-bottom:12px; }
+    .m-usr-info { flex:1; min-width:0; }
+    .m-usr-name {
+      font-weight:600; font-size:.95rem; color:var(--g900);
+      white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+    }
+    .m-usr-email { font-size:.75rem; color:var(--g400); margin-top:1px; }
+    .m-usr-body { padding-top:10px; border-top:1px solid var(--border); }
+    .m-usr-spec { font-size:.8rem; color:var(--g600); margin-bottom:8px; }
+    .m-usr-row {
+      display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;
+    }
+    .m-usr-actions {
+      display:flex; gap:6px; flex-wrap:wrap;
+      padding-top:10px; border-top:1px solid var(--border);
+    }
+    .m-usr-actions .btn { flex:1; justify-content:center; font-size:.8rem; }
+  `],
   template: `
 <div class="page fade-in">
 
@@ -101,6 +124,54 @@ import { UsuarioAdminDTO, UsuarioCreateDTO, UsuarioUpdateDTO } from '../../core/
           }
         </tbody>
       </table>
+    </div>
+
+    <!-- Vista móvil: tarjetas de usuario -->
+    <div class="m-cards">
+      @for (u of usuarios; track u.id) {
+        <div class="m-usr-card">
+          <div class="m-usr-head">
+            <div class="av av-sm" [class.av-blue]="u.rol==='medico'" [class.av-green]="u.rol==='admin'" [class.av-amber]="u.rol==='recepcionista'" style="flex-shrink:0">
+              {{ u.nombreCompleto[0] }}
+            </div>
+            <div class="m-usr-info">
+              <div class="m-usr-name">{{ u.nombreCompleto }}</div>
+              <div class="m-usr-email">{{ u.email }}</div>
+            </div>
+            <span class="badge" [ngClass]="badgeRol(u.rol)" style="flex-shrink:0">{{ labelRol(u.rol) }}</span>
+          </div>
+          <div class="m-usr-body">
+            @if (u.especialidad || u.cedula) {
+              <div class="m-usr-spec">
+                @if (u.especialidad) { <span>{{ u.especialidad }}</span> }
+                @if (u.cedula) { <span class="muted"> · Céd. {{ u.cedula }}</span> }
+              </div>
+            }
+            <div class="m-usr-row">
+              <span class="badge" [class.b-green]="u.activo" [class.b-red]="!u.activo">{{ u.activo ? 'Activo' : 'Inactivo' }}</span>
+              <span class="xs muted">{{ formatFecha(u.createdAt) }}</span>
+            </div>
+            <div class="m-usr-actions">
+              <button class="btn btn-ghost btn-sm" type="button" (click)="abrirEditar(u)">
+                <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4z"/></svg>
+                Editar
+              </button>
+              <button class="btn btn-ghost btn-sm" type="button" (click)="abrirReset(u)" style="color:var(--warning)">
+                <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                Password
+              </button>
+              @if (u.activo) {
+                <button class="btn btn-ghost btn-sm" type="button" (click)="toggleActivo(u)" style="color:var(--danger)">Desactivar</button>
+              } @else {
+                <button class="btn btn-ghost btn-sm" type="button" (click)="toggleActivo(u)" style="color:var(--success)">Activar</button>
+              }
+            </div>
+          </div>
+        </div>
+      }
+      @empty {
+        <div class="empty"><h3>Sin usuarios</h3></div>
+      }
     </div>
 
     @if (totalPaginas > 1) {

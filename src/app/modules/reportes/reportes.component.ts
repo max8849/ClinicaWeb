@@ -24,6 +24,23 @@ import { ReporteCitasDTO, ReportePacientesDTO, ReporteMedicosDTO } from '../../c
     .bar-num { font-size:.8rem;font-weight:600;color:var(--g700);min-width:30px;text-align:right; }
     .rpt-grid { display:grid;grid-template-columns:1fr 1fr;gap:18px; }
     @media(max-width:640px) { .rpt-grid { grid-template-columns:1fr; } }
+    /* ── Médicos: tarjetas móvil ── */
+    .m-med-card {
+      background:var(--white); border:1px solid var(--border);
+      border-radius:var(--rl); padding:14px 16px;
+    }
+    .m-med-head { margin-bottom:10px; }
+    .m-med-nombre { font-weight:600; font-size:.95rem; color:var(--g900); }
+    .m-med-esp { font-size:.78rem; color:var(--g500); margin-top:2px; }
+    .m-med-stats {
+      display:grid; grid-template-columns:1fr 1fr; gap:8px 12px;
+      padding-top:10px; border-top:1px solid var(--border);
+    }
+    .m-stat-lbl {
+      font-size:.62rem; font-weight:700; text-transform:uppercase;
+      letter-spacing:.04em; color:var(--g400); margin-bottom:2px;
+    }
+    .m-stat-val { font-size:.88rem; color:var(--g800); font-weight:600; }
   `],
   template: `
 <div class="page fade-in">
@@ -238,6 +255,51 @@ import { ReporteCitasDTO, ReportePacientesDTO, ReporteMedicosDTO } from '../../c
             }
           </tbody>
         </table>
+      </div>
+
+      <!-- Vista móvil: tarjetas de médico -->
+      <div class="m-cards">
+        @for (m of rm.rendimiento; track m.medicoId) {
+          <div class="m-med-card">
+            <div class="m-med-head">
+              <div class="m-med-nombre">{{ m.medicoNombre }}</div>
+              <div class="m-med-esp">{{ m.especialidad || '—' }}</div>
+            </div>
+            <div class="m-med-stats">
+              <div>
+                <div class="m-stat-lbl">Total citas</div>
+                <div class="m-stat-val">{{ m.totalCitas }}</div>
+              </div>
+              <div>
+                <div class="m-stat-lbl">% Asistencia</div>
+                <div class="m-stat-val">
+                  <span class="badge" [class.b-green]="m.porcentajeAsistencia>=70" [class.b-amber]="m.porcentajeAsistencia>=40&&m.porcentajeAsistencia<70" [class.b-red]="m.porcentajeAsistencia<40">
+                    {{ m.porcentajeAsistencia }}%
+                  </span>
+                </div>
+              </div>
+              <div>
+                <div class="m-stat-lbl">Completadas</div>
+                <div class="m-stat-val"><span class="badge b-green">{{ m.completadas }}</span></div>
+              </div>
+              <div>
+                <div class="m-stat-lbl">Canceladas</div>
+                <div class="m-stat-val"><span class="badge b-red">{{ m.canceladas }}</span></div>
+              </div>
+              <div>
+                <div class="m-stat-lbl">Notas</div>
+                <div class="m-stat-val">{{ m.totalNotas }}</div>
+              </div>
+              <div>
+                <div class="m-stat-lbl">Recetas</div>
+                <div class="m-stat-val">{{ m.totalRecetas }}</div>
+              </div>
+            </div>
+          </div>
+        }
+        @empty {
+          <div class="empty"><h3>Sin datos en el período</h3></div>
+        }
       </div>
     }
   }

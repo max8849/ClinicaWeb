@@ -10,6 +10,35 @@ import { PacienteListDTO, PacienteCreateDTO } from '../../core/models/api.models
   selector: 'app-pacientes',
   standalone: true,
   imports: [CommonModule, RouterModule, FormsModule],
+  styles: [`
+    .m-pac-card {
+      background: var(--white); border: 1px solid var(--border);
+      border-radius: var(--rl); padding: 14px 16px;
+      display: block; text-decoration: none; color: inherit;
+      transition: box-shadow .15s;
+    }
+    .m-pac-card:active { box-shadow: var(--sh); }
+    .m-pac-head { display:flex; align-items:center; gap:10px; margin-bottom:12px; }
+    .m-pac-info { flex:1; min-width:0; }
+    .m-pac-name {
+      font-weight:600; font-size:.95rem; color:var(--g900);
+      white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+    }
+    .m-pac-email { font-size:.75rem; color:var(--g400); margin-top:1px; }
+    .m-pac-grid {
+      display:grid; grid-template-columns:1fr 1fr; gap:8px 12px;
+      padding-top:12px; border-top:1px solid var(--border);
+    }
+    .m-fld-lbl {
+      font-size:.62rem; font-weight:700; text-transform:uppercase;
+      letter-spacing:.04em; color:var(--g400); margin-bottom:2px;
+    }
+    .m-fld-val { font-size:.83rem; color:var(--g800); }
+    .m-pac-foot {
+      display:flex; align-items:center; justify-content:space-between;
+      margin-top:10px; padding-top:10px; border-top:1px solid var(--border);
+    }
+  `],
   template: `
 <div class="page fade-in">
 
@@ -95,6 +124,61 @@ import { PacienteListDTO, PacienteCreateDTO } from '../../core/models/api.models
           }
         </tbody>
       </table>
+    </div>
+
+    <!-- Vista móvil: tarjetas de paciente -->
+    <div class="m-cards">
+      @for (p of pacientes; track p.id) {
+        <a class="m-pac-card" [routerLink]="['/pacientes', p.id]">
+          <div class="m-pac-head">
+            <div class="av av-sm" [class.av-blue]="p.sexo==='F'" [class.av-green]="p.sexo==='M'" style="flex-shrink:0">
+              {{ p.nombre[0] }}{{ p.apellidoPaterno[0] }}
+            </div>
+            <div class="m-pac-info">
+              <div class="m-pac-name">{{ p.nombre }} {{ p.apellidoPaterno }} {{ p.apellidoMaterno }}</div>
+              <div class="m-pac-email">{{ p.email || '—' }}</div>
+            </div>
+            <span class="chip" style="flex-shrink:0">{{ p.folio }}</span>
+          </div>
+          <div class="m-pac-grid">
+            <div>
+              <div class="m-fld-lbl">Edad / Sexo</div>
+              <div class="m-fld-val">
+                <span style="font-weight:500">{{ p.edad }}</span> años
+                <span class="badge" [class.b-blue]="p.sexo==='F'" [class.b-teal]="p.sexo==='M'" style="margin-left:4px;font-size:.65rem">{{ p.sexo }}</span>
+              </div>
+            </div>
+            <div>
+              <div class="m-fld-lbl">Teléfono</div>
+              <div class="m-fld-val">{{ p.telefono }}</div>
+            </div>
+            <div>
+              <div class="m-fld-lbl">Alergias</div>
+              <div class="m-fld-val">
+                @if (tieneAlergia(p)) {
+                  <span class="badge b-red" style="font-size:.7rem">{{ p.alergias }}</span>
+                } @else {
+                  <span style="color:var(--g400);font-size:.8rem">Ninguna</span>
+                }
+              </div>
+            </div>
+            <div>
+              <div class="m-fld-lbl">Consultas</div>
+              <div class="m-fld-val" style="font-weight:600">{{ p.totalConsultas }}</div>
+            </div>
+          </div>
+          <div class="m-pac-foot">
+            <span class="xs muted">{{ p.ultimaConsulta ? formatFecha(p.ultimaConsulta) : 'Sin consultas' }}</span>
+            <a class="btn btn-ghost btn-sm" [routerLink]="['/expediente', p.id]" (click)="$event.stopPropagation()" style="font-size:.75rem;padding:5px 10px">Expediente →</a>
+          </div>
+        </a>
+      }
+      @empty {
+        <div class="empty">
+          <div class="empty-ico"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div>
+          <h3>Sin resultados</h3>
+        </div>
+      }
     </div>
 
     @if (totalPaginas > 1) {

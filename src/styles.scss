@@ -276,6 +276,9 @@ tbody td { padding: 12px 14px; font-size: .875rem; color: var(--g700); vertical-
 /* ── Paginación ──────────────────────────────────────────────────── */
 .pag-row { display: flex; justify-content: center; align-items: center; gap: 12px; margin-top: 18px; }
 
+/* ── Mobile card lists (reemplazo de tablas en móvil) ────────────── */
+.m-cards { display: none; }
+
 /* ── Section title ───────────────────────────────────────────────── */
 .sec { font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: var(--g500); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
 .sec::after { content: ''; flex: 1; height: 1px; background: var(--border); }
@@ -411,10 +414,6 @@ tbody td { padding: 12px 14px; font-size: .875rem; color: var(--g700); vertical-
   /* bottom nav visible */
   .bottom-nav { display: flex; }
 
-  /* tabla scroll sin perder info */
-  table { font-size: .8rem; }
-  thead th, tbody td { padding: 9px 10px; }
-
   .stat-card { padding: 14px 16px; }
   .st-val { font-size: 1.5rem; }
 
@@ -422,6 +421,10 @@ tbody td { padding: 12px 14px; font-size: .875rem; color: var(--g700); vertical-
 
   .tab-group { width: 100%; }
   .tab-btn { flex: 1; text-align: center; font-size: .78rem; padding: 7px 8px; }
+
+  /* Tablas → tarjetas en móvil */
+  .tbl-wrap { display: none !important; }
+  .m-cards  { display: flex !important; flex-direction: column; gap: 10px; }
 }
 
 @media (max-width: 380px) {

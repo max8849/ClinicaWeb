@@ -1,0 +1,1162 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manual de Usuario — mDental</title>
+<style>
+  :root {
+    --primary: #0369a1;
+    --primary-dk: #025580;
+    --primary-lt: #dbeafe;
+    --accent: #0d9488;
+    --accent-lt: #ccfbf1;
+    --success: #16a34a;
+    --success-lt: #dcfce7;
+    --danger: #dc2626;
+    --danger-lt: #fee2e2;
+    --warning: #d97706;
+    --warning-lt: #fef3c7;
+    --g50: #f8fafc;
+    --g100: #f1f5f9;
+    --g200: #e2e8f0;
+    --g400: #94a3b8;
+    --g500: #64748b;
+    --g600: #475569;
+    --g700: #334155;
+    --g800: #1e293b;
+    --g900: #0f172a;
+    --border: #dde3ed;
+    --white: #ffffff;
+    --r: 8px;
+    --rl: 12px;
+    --sh: 0 2px 8px rgba(0,0,0,.08);
+    --shl: 0 8px 32px rgba(0,0,0,.12);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { font-size: 16px; scroll-behavior: smooth; }
+  body {
+    font-family: -apple-system, 'Segoe UI', system-ui, sans-serif;
+    background: var(--g50);
+    color: var(--g800);
+    line-height: 1.65;
+  }
+
+  /* ── PORTADA ── */
+  .cover {
+    background: linear-gradient(155deg, #0c4a6e 0%, #0369a1 55%, #0ea5e9 100%);
+    color: white;
+    padding: 80px 60px;
+    position: relative;
+    overflow: hidden;
+  }
+  .cover::after {
+    content: '';
+    position: absolute;
+    right: -80px; top: -80px;
+    width: 400px; height: 400px;
+    background: rgba(255,255,255,.05);
+    border-radius: 50%;
+  }
+  .cover-logo {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 48px;
+  }
+  .cover-logo-ico {
+    width: 56px; height: 56px;
+    background: rgba(255,255,255,.2);
+    backdrop-filter: blur(8px);
+    border-radius: 16px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 28px;
+  }
+  .cover-logo-name { font-size: 1.8rem; font-weight: 800; letter-spacing: -.03em; }
+  .cover-logo-sub  { font-size: .85rem; opacity: .7; margin-top: 2px; }
+  .cover h1 { font-size: 3rem; font-weight: 800; letter-spacing: -.04em; line-height: 1.1; margin-bottom: 16px; }
+  .cover h1 span { color: #7dd3fc; }
+  .cover .cover-sub { font-size: 1.1rem; opacity: .75; max-width: 480px; }
+  .cover-meta {
+    display: flex;
+    gap: 28px;
+    margin-top: 48px;
+    padding-top: 32px;
+    border-top: 1px solid rgba(255,255,255,.2);
+    font-size: .85rem;
+    opacity: .7;
+    flex-wrap: wrap;
+  }
+  .cover-meta span::before { content: '· '; }
+  .cover-meta span:first-child::before { content: ''; }
+
+  /* ── LAYOUT ── */
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 32px 80px;
+  }
+
+  /* ── TABLA DE CONTENIDOS ── */
+  .toc {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--rl);
+    padding: 32px 36px;
+    margin-bottom: 48px;
+    box-shadow: var(--sh);
+  }
+  .toc h2 { font-size: 1rem; font-weight: 700; color: var(--g500); text-transform: uppercase; letter-spacing: .08em; margin-bottom: 20px; }
+  .toc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 32px; }
+  .toc a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 7px 0;
+    text-decoration: none;
+    color: var(--g700);
+    font-size: .9rem;
+    border-bottom: 1px solid var(--g100);
+    transition: color .15s;
+  }
+  .toc a:hover { color: var(--primary); }
+  .toc-num {
+    font-size: .72rem;
+    font-weight: 700;
+    background: var(--primary-lt);
+    color: var(--primary);
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+
+  /* ── SECCIONES ── */
+  .section {
+    margin-bottom: 56px;
+    scroll-margin-top: 20px;
+  }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 24px;
+    padding-bottom: 14px;
+    border-bottom: 2px solid var(--border);
+  }
+  .section-num {
+    width: 40px; height: 40px;
+    background: var(--primary);
+    color: white;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 1rem;
+    flex-shrink: 0;
+  }
+  .section-title { font-size: 1.5rem; font-weight: 700; color: var(--g900); }
+  .section-desc  { font-size: .9rem; color: var(--g500); margin-top: 2px; }
+
+  /* ── CARDS DE CONTENIDO ── */
+  .card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--rl);
+    padding: 24px 28px;
+    margin-bottom: 20px;
+    box-shadow: var(--sh);
+  }
+  .card h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--g900);
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .card h3 .ico {
+    font-size: 1.1rem;
+  }
+
+  /* ── PASOS NUMERADOS ── */
+  .steps { list-style: none; counter-reset: step; }
+  .steps li {
+    counter-increment: step;
+    display: flex;
+    gap: 14px;
+    margin-bottom: 14px;
+    align-items: flex-start;
+  }
+  .steps li::before {
+    content: counter(step);
+    min-width: 28px; height: 28px;
+    background: var(--primary);
+    color: white;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: .78rem; font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .steps li p { font-size: .9rem; color: var(--g700); padding-top: 4px; }
+  .steps li strong { color: var(--g900); }
+
+  /* ── CALLOUTS ── */
+  .tip, .warn, .info, .note {
+    border-radius: var(--r);
+    padding: 14px 18px;
+    margin: 14px 0;
+    font-size: .88rem;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+  .tip  { background: var(--accent-lt);   border-left: 4px solid var(--accent);  color: #0f5749; }
+  .warn { background: var(--warning-lt);  border-left: 4px solid var(--warning); color: #7c2d00; }
+  .info { background: var(--primary-lt);  border-left: 4px solid var(--primary); color: #1e3a5f; }
+  .note { background: var(--g100);        border-left: 4px solid var(--g400);    color: var(--g700); }
+  .tip::before  { content: '💡'; font-size: 1rem; flex-shrink: 0; }
+  .warn::before { content: '⚠️'; font-size: 1rem; flex-shrink: 0; }
+  .info::before { content: 'ℹ️'; font-size: 1rem; flex-shrink: 0; }
+  .note::before { content: '📝'; font-size: 1rem; flex-shrink: 0; }
+
+  /* ── BADGES ── */
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: .75rem;
+    font-weight: 600;
+    vertical-align: middle;
+  }
+  .b-blue   { background: #dbeafe; color: #1d4ed8; }
+  .b-green  { background: #dcfce7; color: #15803d; }
+  .b-red    { background: #fee2e2; color: #b91c1c; }
+  .b-amber  { background: #fef3c7; color: #92400e; }
+  .b-gray   { background: #f1f5f9; color: #475569; }
+  .b-teal   { background: #ccfbf1; color: #0f766e; }
+  .b-purple { background: #ede9fe; color: #6d28d9; }
+
+  /* ── TABLA ── */
+  table.manual-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: .875rem;
+    margin: 16px 0;
+  }
+  table.manual-table th {
+    background: var(--g50);
+    text-align: left;
+    padding: 10px 14px;
+    font-size: .72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    color: var(--g600);
+    border-bottom: 2px solid var(--border);
+  }
+  table.manual-table td {
+    padding: 11px 14px;
+    border-bottom: 1px solid var(--border);
+    color: var(--g700);
+    vertical-align: top;
+  }
+  table.manual-table tr:last-child td { border-bottom: none; }
+  table.manual-table tr:hover td { background: var(--g50); }
+
+  /* ── SCREENSHOT SIMULADO ── */
+  .mockup {
+    background: var(--white);
+    border: 2px solid var(--border);
+    border-radius: var(--rl);
+    overflow: hidden;
+    margin: 18px 0;
+    box-shadow: var(--shl);
+  }
+  .mockup-bar {
+    background: linear-gradient(90deg, #0c4a6e 0%, #0369a1 100%);
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .mockup-bar-dot { width: 10px; height: 10px; border-radius: 50%; }
+  .mockup-bar-title { color: white; font-size: .8rem; font-weight: 600; margin-left: 8px; opacity: .9; }
+  .mockup-body { padding: 20px 22px; }
+
+  /* ── KPI SIMULADO ── */
+  .kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 14px 0; }
+  .kpi-card {
+    background: var(--g50);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    padding: 14px 16px;
+  }
+  .kpi-label { font-size: .65rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--g500); margin-bottom: 4px; }
+  .kpi-value { font-size: 1.6rem; font-weight: 700; color: var(--g900); line-height: 1; }
+  .kpi-sub   { font-size: .72rem; color: var(--g400); margin-top: 3px; }
+
+  /* ── ITEM CITA ── */
+  .cita-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    border-radius: var(--r);
+    border: 1px solid var(--border);
+    margin-bottom: 8px;
+    font-size: .85rem;
+  }
+  .av {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: .72rem; font-weight: 700;
+    flex-shrink: 0;
+  }
+  .av-blue  { background: #dbeafe; color: #1d4ed8; }
+  .av-green { background: #dcfce7; color: #15803d; }
+
+  /* ── ROL CARDS ── */
+  .role-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin: 16px 0; }
+  .role-card {
+    border-radius: var(--r);
+    padding: 16px 18px;
+    border: 1px solid;
+  }
+  .role-card.admin        { background: #fee2e2; border-color: #fca5a5; }
+  .role-card.medico       { background: #dbeafe; border-color: #93c5fd; }
+  .role-card.recepcionista{ background: #fef3c7; border-color: #fde68a; }
+  .role-card h4 { font-size: .85rem; font-weight: 700; margin-bottom: 8px; }
+  .role-card ul { list-style: none; font-size: .8rem; color: var(--g700); }
+  .role-card ul li::before { content: '✓ '; color: var(--success); font-weight: 700; }
+  .role-card ul li { margin-bottom: 3px; }
+
+  /* ── DIVIDER ── */
+  .divider { height: 1px; background: var(--border); margin: 32px 0; }
+
+  /* ── FLUJO DE ESTADO ── */
+  .estado-flow {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin: 12px 0;
+  }
+  .estado-flow .arrow { color: var(--g400); font-size: 1.1rem; }
+
+  /* ── SIDEBAR SIMULADO ── */
+  .nav-sim {
+    background: #0b3d5c;
+    border-radius: var(--r);
+    padding: 12px 10px;
+    display: inline-block;
+    min-width: 180px;
+  }
+  .nav-sim-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 10px;
+    border-radius: 6px;
+    font-size: .83rem;
+    color: #94d8f8;
+    margin-bottom: 2px;
+    cursor: default;
+  }
+  .nav-sim-item.active { background: rgba(56,189,248,.18); color: #e0f2fe; font-weight: 600; }
+
+  /* ── PRINT ── */
+  @media print {
+    .cover { padding: 60px 40px; break-after: page; }
+    .container { padding: 32px; }
+    .section { break-inside: avoid; }
+    .card { break-inside: avoid; box-shadow: none; border: 1px solid var(--border); }
+    .mockup { box-shadow: none; }
+    .toc { break-after: page; }
+    a { color: var(--primary); }
+  }
+
+  @media (max-width: 640px) {
+    .cover { padding: 40px 24px; }
+    .cover h1 { font-size: 2rem; }
+    .container { padding: 24px 16px 60px; }
+    .toc-grid { grid-template-columns: 1fr; }
+    .kpi-row { grid-template-columns: 1fr 1fr; }
+    .role-grid { grid-template-columns: 1fr; }
+    .section-title { font-size: 1.2rem; }
+    .card { padding: 18px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════
+     PORTADA
+═══════════════════════════════════ -->
+<div class="cover">
+  <div class="cover-logo">
+    <div class="cover-logo-ico">🦷</div>
+    <div>
+      <div class="cover-logo-name">mDental</div>
+      <div class="cover-logo-sub">Sistema de Gestión Clínica</div>
+    </div>
+  </div>
+  <h1>Manual de<br><span>Usuario</span></h1>
+  <p class="cover-sub">Guía completa para la operación del sistema de gestión clínica mDental. Citas, expedientes, documentos y más.</p>
+  <div class="cover-meta">
+    <span>Versión 1.0</span>
+    <span>Módulos: Citas · Pacientes · Expedientes · Reportes · Documentos</span>
+    <span>Monterrey, N.L.</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════
+     CONTENIDO
+═══════════════════════════════════ -->
+<div class="container">
+
+  <!-- TABLA DE CONTENIDOS -->
+  <div class="toc">
+    <h2>Tabla de contenidos</h2>
+    <div class="toc-grid">
+      <a href="#s1"><span class="toc-num">1</span> Introducción y roles de usuario</a>
+      <a href="#s2"><span class="toc-num">2</span> Inicio de sesión</a>
+      <a href="#s3"><span class="toc-num">3</span> Navegación principal</a>
+      <a href="#s4"><span class="toc-num">4</span> Panel general (Dashboard)</a>
+      <a href="#s5"><span class="toc-num">5</span> Agenda de citas</a>
+      <a href="#s6"><span class="toc-num">6</span> Pacientes</a>
+      <a href="#s7"><span class="toc-num">7</span> Expediente clínico</a>
+      <a href="#s8"><span class="toc-num">8</span> Sala de espera</a>
+      <a href="#s9"><span class="toc-num">9</span> Documentos clínicos</a>
+      <a href="#s10"><span class="toc-num">10</span> Reportes y estadísticas</a>
+      <a href="#s11"><span class="toc-num">11</span> Gestión de usuarios</a>
+      <a href="#s12"><span class="toc-num">12</span> Perfil de usuario</a>
+    </div>
+  </div>
+
+
+  <!-- ═══ 1. INTRODUCCIÓN ═══ -->
+  <div class="section" id="s1">
+    <div class="section-header">
+      <div class="section-num">1</div>
+      <div>
+        <div class="section-title">Introducción y roles de usuario</div>
+        <div class="section-desc">¿Qué es mDental y quién puede usarlo?</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3><span class="ico">🏥</span> ¿Qué es mDental?</h3>
+      <p style="font-size:.9rem;color:var(--g700);margin-bottom:12px">
+        <strong>mDental</strong> es un sistema web de gestión clínica diseñado para clínicas y consultorios dentales.
+        Permite administrar citas, expedientes clínicos, documentos legales, reportes estadísticos y el personal de la clínica, todo desde un navegador web — sin necesidad de instalar ningún programa.
+      </p>
+      <div class="tip">El sistema funciona en computadoras, tablets y teléfonos celulares. Solo necesitas conexión a internet y un navegador actualizado (Chrome, Firefox, Safari o Edge).</div>
+    </div>
+
+    <div class="card">
+      <h3><span class="ico">👥</span> Roles de usuario</h3>
+      <p style="font-size:.85rem;color:var(--g500);margin-bottom:16px">Cada usuario tiene un rol que define qué puede ver y hacer dentro del sistema.</p>
+      <div class="role-grid">
+        <div class="role-card admin">
+          <h4>🔴 Administrador</h4>
+          <ul>
+            <li>Acceso completo al sistema</li>
+            <li>Gestionar usuarios</li>
+            <li>Ver reportes</li>
+            <li>Crear y modificar citas</li>
+            <li>Ver expedientes</li>
+            <li>Administrar documentos</li>
+          </ul>
+        </div>
+        <div class="role-card medico">
+          <h4>🔵 Odontólogo (Médico)</h4>
+          <ul>
+            <li>Ver su agenda de citas</li>
+            <li>Crear notas SOAP</li>
+            <li>Emitir recetas</li>
+            <li>Ver expedientes</li>
+            <li>Imprimir documentos</li>
+          </ul>
+        </div>
+        <div class="role-card recepcionista">
+          <h4>🟡 Recepcionista</h4>
+          <ul>
+            <li>Agendar citas</li>
+            <li>Registrar pacientes</li>
+            <li>Cambiar estado de citas</li>
+            <li>Ver sala de espera</li>
+            <li>Imprimir documentos</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ═══ 2. INICIO DE SESIÓN ═══ -->
+  <div class="section" id="s2">
+    <div class="section-header">
+      <div class="section-num">2</div>
+      <div>
+        <div class="section-title">Inicio de sesión</div>
+        <div class="section-desc">Cómo acceder al sistema</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3><span class="ico">🔐</span> Acceder al sistema</h3>
+      <ol class="steps">
+        <li><p>Abre tu navegador web (Chrome, Safari, Firefox o Edge) e ingresa la dirección web del sistema que te proporcionó el administrador.</p></li>
+        <li><p>En la pantalla de inicio de sesión, escribe tu <strong>correo electrónico</strong> en el primer campo.</p></li>
+        <li><p>Escribe tu <strong>contraseña</strong> en el segundo campo.</p></li>
+        <li><p>Presiona el botón <strong>"Entrar"</strong> o la tecla <kbd style="background:var(--g100);padding:2px 6px;border-radius:4px;font-size:.8rem;border:1px solid var(--g300)">Enter</kbd>.</p></li>
+        <li><p>Si las credenciales son correctas, serás redirigido al <strong>Panel general</strong>.</p></li>
+      </ol>
+
+      <div class="mockup" style="margin-top:18px">
+        <div class="mockup-bar">
+          <div class="mockup-bar-dot" style="background:#ef4444"></div>
+          <div class="mockup-bar-dot" style="background:#f59e0b;margin-left:6px"></div>
+          <div class="mockup-bar-dot" style="background:#22c55e;margin-left:6px"></div>
+          <span class="mockup-bar-title">🦷 mDental — Inicio de sesión</span>
+        </div>
+        <div class="mockup-body">
+          <div style="max-width:340px;margin:0 auto;text-align:center;padding:16px 0">
+            <div style="font-size:1.6rem;margin-bottom:8px">🦷</div>
+            <div style="font-weight:700;font-size:1.1rem;color:var(--g900)">mDental</div>
+            <div style="font-size:.75rem;color:var(--g400);margin-bottom:20px">Sistema de gestión clínica</div>
+            <div style="text-align:left;margin-bottom:12px">
+              <div style="font-size:.78rem;font-weight:600;color:var(--g700);margin-bottom:5px">Correo electrónico</div>
+              <div style="border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-size:.85rem;color:var(--g400)">usuario@mdental.mx</div>
+            </div>
+            <div style="text-align:left;margin-bottom:16px">
+              <div style="font-size:.78rem;font-weight:600;color:var(--g700);margin-bottom:5px">Contraseña</div>
+              <div style="border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-size:.85rem;color:var(--g400)">••••••••</div>
+            </div>
+            <div style="background:var(--primary);color:white;border-radius:8px;padding:12px;font-size:.9rem;font-weight:600;text-align:center">Entrar</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="warn" style="margin-top:14px">Si aparece el mensaje <em>"Credenciales incorrectas"</em>, verifica que el correo y contraseña sean correctos. Si olvidaste tu contraseña, contacta al administrador del sistema para restablecerla.</div>
+    </div>
+  </div>
+
+
+  <!-- ═══ 3. NAVEGACIÓN ═══ -->
+  <div class="section" id="s3">
+    <div class="section-header">
+      <div class="section-num">3</div>
+      <div>
+        <div class="section-title">Navegación principal</div>
+        <div class="section-desc">Cómo moverse por el sistema</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3><span class="ico">🗂️</span> Menú lateral (Sidebar)</h3>
+      <p style="font-size:.88rem;color:var(--g600);margin-bottom:16px">El menú azul oscuro a la izquierda es la barra de navegación principal. Desde ahí accedes a todas las secciones del sistema.</p>
+
+      <div style="display:flex;gap:24px;align-items:flex-start;flex-wrap:wrap">
+        <div class="nav-sim">
+          <div style="padding:8px 10px;margin-bottom:4px">
+            <div style="font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#38bdf8;opacity:.6">General</div>
+          </div>
+          <div class="nav-sim-item active">📊 Panel</div>
+          <div class="nav-sim-item">📅 Citas</div>
+          <div style="padding:8px 10px;margin:4px 0">
+            <div style="font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#38bdf8;opacity:.6">Pacientes</div>
+          </div>
+          <div class="nav-sim-item">👤 Pacientes</div>
+          <div class="nav-sim-item">📄 Documentos</div>
+          <div style="padding:8px 10px;margin:4px 0">
+            <div style="font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#38bdf8;opacity:.6">Análisis</div>
+          </div>
+          <div class="nav-sim-item">📈 Reportes</div>
+        </div>
+        <div style="flex:1;min-width:200px">
+          <table class="manual-table">
+            <thead><tr><th>Sección</th><th>Descripción</th></tr></thead>
+            <tbody>
+              <tr><td><strong>📊 Panel</strong></td><td>Vista general con estadísticas del día</td></tr>
+              <tr><td><strong>📅 Citas</strong></td><td>Agenda de citas en lista o por día</td></tr>
+              <tr><td><strong>👤 Pacientes</strong></td><td>Listado y registro de pacientes</td></tr>
+              <tr><td><strong>📄 Documentos</strong></td><td>Documentos clínicos para imprimir</td></tr>
+              <tr><td><strong>📈 Reportes</strong></td><td>Estadísticas y exportaciones</td></tr>
+              <tr><td><strong>👥 Usuarios</strong></td><td>Solo para administradores</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3><span class="ico">📱</span> Barra superior (Topbar)</h3>
+      <div style="display:flex;gap:10px;align-items:center;background:white;border:1px solid var(--border);border-radius:8px;padding:10px 14px;margin:12px 0;flex-wrap:wrap">
+        <div style="font-size:1.2rem">☰</div>
+        <div style="flex:1;font-size:.9rem;font-weight:700;color:var(--g900)">mDental</div>
+        <div style="background:#1e293b;color:white;padding:6px 10px;border-radius:100px;font-size:.8rem;display:flex;align-items:center;gap:6px">🌙 <span>Modo noche</span></div>
+        <div style="background:var(--g50);border:1px solid var(--border);padding:5px 10px 5px 5px;border-radius:100px;font-size:.82rem;display:flex;align-items:center;gap:8px"><div class="av av-blue" style="width:26px;height:26px;font-size:.65rem">MA</div><span>María</span></div>
+      </div>
+      <ul style="font-size:.88rem;color:var(--g700);list-style:none;">
+        <li style="margin-bottom:8px">☰ <strong>Ícono de menú</strong> — en celular o tablet abre/cierra el menú lateral</li>
+        <li style="margin-bottom:8px">🌙 / ☀️ <strong>Modo noche/día</strong> — cambia el tema de la aplicación</li>
+        <li style="margin-bottom:8px">👤 <strong>Tu nombre</strong> — muestra tu perfil en la esquina superior derecha</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3><span class="ico">📲</span> Navegación en celular</h3>
+      <p style="font-size:.88rem;color:var(--g600);margin-bottom:12px">En dispositivos móviles aparece una barra de navegación en la parte inferior de la pantalla con los accesos más frecuentes:</p>
+      <div style="background:white;border:1px solid var(--border);border-top:2px solid var(--border);border-radius:8px;padding:12px 20px;display:flex;justify-content:space-around;max-width:360px">
+        <div style="text-align:center;font-size:.65rem;color:var(--primary)">📊<br>Panel</div>
+        <div style="text-align:center;font-size:.65rem;color:var(--g400)">📅<br>Citas</div>
+        <div style="text-align:center;font-size:.65rem;color:var(--g400)">👤<br>Pacientes</div>
+        <div style="text-align:center;font-size:.65rem;color:var(--g400)">☰<br>Más</div>
+      </div>
+      <div class="tip">En "Más" puedes acceder al resto de secciones (Documentos, Reportes, Usuarios, etc.).</div>
+    </div>
+  </div>
+
+
+  <!-- ═══ 4. DASHBOARD ═══ -->
+  <div class="section" id="s4">
+    <div class="section-header">
+      <div class="section-num">4</div>
+      <div>
+        <div class="section-title">Panel general</div>
+        <div class="section-desc">Vista rápida del estado de la clínica</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3><span class="ico">📊</span> ¿Qué muestra el Panel?</h3>
+      <p style="font-size:.88rem;color:var(--g600);margin-bottom:16px">Al ingresar al sistema, lo primero que verás es el Panel general. Aquí encontrarás un resumen de la actividad del día y accesos rápidos a las principales funciones.</p>
+
+      <div class="kpi-row">
+        <div class="kpi-card">
+          <div class="kpi-label">Citas hoy</div>
+          <div class="kpi-value" style="color:var(--primary)">12</div>
+          <div class="kpi-sub">4 confirmadas</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Pacientes</div>
+          <div class="kpi-value">347</div>
+          <div class="kpi-sub">Total registrados</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Pendientes</div>
+          <div class="kpi-value" style="color:var(--warning)">3</div>
+          <div class="kpi-sub">Sin confirmar</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Completadas</div>
+          <div class="kpi-value" style="color:var(--success)">48</div>
+          <div class="kpi-sub">Este mes</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3><span class="ico">📋</span> Citas del día</h3>
+      <p style="font-size:.88rem;color:var(--g600);margin-bottom:14px">La lista de citas programadas para hoy se muestra con el estado de cada paciente:</p>
+      <div class="cita-item">
+        <div class="av av-blue">MG</div>
+        <div style="flex:1">
+          <div style="font-weight:600;font-size:.88rem">María García López</div>
+          <div style="font-size:.75rem;color:var(--g400)">Limpieza dental · Dr. Juan Pérez</div>
+        </div>
+        <div style="font-size:.8rem;font-weight:600;color:var(--g700)">09:00</div>
+        <span class="badge b-blue">Confirmada</span>
+      </div>
+      <div class="cita-item">
+        <div class="av av-green">CL</div>
+        <div style="flex:1">
+          <div style="font-weight:600;font-size:.88rem">Carlos López Martínez</div>
+          <div style="font-size:.75rem;color:var(--g400)">Consulta general · Dra. Ana Ruiz</div>
+        </div>
+        <div style="font-size:.8rem;font-weight:600;color:var(--g700)">10:30</div>
+        <span class="badge b-teal">En consulta</span>
+      </div>
+      <div class="tip">Haz clic en cualquier fila para ver el detalle del paciente. Usa el botón "Ver todas" para ir a la agenda completa.</div>
+    </div>
+  </div>
+
+
+  <!-- ═══ 5. CITAS ═══ -->
+  <div class="section" id="s5">
+    <div class="section-header">
+      <div class="section-num">5</div>
+      <div>
+        <div class="section-title">Agenda de citas</div>
+        <div class="section-desc">Cómo ver, crear y gestionar citas</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3><span class="ico">📅</span> Vista Lista vs. Vista Día</h3>
+      <p style="font-size:.88rem;color:var(--g600);margin-bottom:14px">La sección de Citas tiene dos modos de visualización, seleccionables con los botones en la esquina superior derecha:</p>
+      <div style="display:flex;gap:10px;margin-bottom:16px">
+        <div style="background:var(--primary);color:white;padding:7px 16px;border-radius:6px;font-size:.85rem;font-weight:600">Lista</div>
+        <div style="background:var(--g100);color:var(--g500);padding:7px 16px;border-radius:6px;font-size:.85rem">Día</div>
+      </div>
+      <table class="manual-table">
+        <thead><tr><th>Vista</th><th>¿Cuándo usarla?</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Lista</strong></td><td>Para buscar citas por nombre de paciente, filtrar por fecha, estado u odontólogo. Ideal para la recepcionista.</td></tr>
+          <tr><td><strong>Día</strong></td><td>Para ver la agenda del día con los horarios de cada odontólogo en columnas. Ideal para ver disponibilidad.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <h3><span class="ico">🔍</span> Buscar y filtrar citas</h3>
+      <p style="font-size:.88rem;color:var(--g600);margin-bottom:12px">En la barra de filtros puedes combinar cualquiera de estas opciones:</p>
+      <table class="manual-table">
+        <thead><tr><th>Filtro</th><th>Descripción</th></tr></thead>
+        <tbody>
+          <tr><td>🔍 <strong>Buscar paciente</strong></td><td>Escribe el nombre del paciente para filtrar en tiempo real</td></tr>
+          <tr><td>📆 <strong>Fecha</strong></td><td>Selecciona una fecha específica para ver solo las citas de ese día</td></tr>
+          <tr><td>🏷️ <strong>Estado</strong></td><td>Filtra por estado: Programada, Confirmada, En curso, Completada, Cancelada o No asistió</td></tr>
+          <tr><td>👨‍⚕️ <strong>Odontólogo</strong></td><td>Muestra solo las citas asignadas a un odontólogo específico</td></tr>
+        </tbody>
+      </table>
+      <div class="tip">Puedes usar el botón <strong>"Limpiar"</strong> para quitar todos los filtros y ver todas las citas.</div>
+    </div>
+
+    <div class="card">
+      <h3><span class="ico">➕</span> Crear una nueva cita</h3>
+      <ol class="steps">
+        <li><p>Haz clic en el botón azul <strong>"+ Nueva cita"</strong> en la esquina superior derecha.</p></li>
+        <li><p>En el formulario que aparece, <strong>busca al paciente</strong> escribiendo su nombre en el campo "Paciente". Aparecerá una lista de sugerencias — haz clic en el nombre correcto.</p></li>
+        <li><p>Busca y selecciona el <strong>odontólogo</strong> que atenderá la cita de la misma manera.</p></li>
+        <li><p>Selecciona la <strong>fecha</strong> y la <strong>hora</strong> de la cita.</p></li>
+        <li><p>Elige el <strong>tipo de consulta</strong> (Limpieza, Extracción, Ortodoncia, etc.) y la <strong>duración estimada</strong>.</p></li>
+        <li><p>Escribe el <strong>motivo</strong> de la cita (ej. "Dolor en molar inferior derecho").</p></li>
+        <li><p>Haz clic en <strong>"Agendar"</strong>. La cita aparecerá inmediatamente en la lista.</p></li>
+      </ol>
+      <div class="warn">Los campos Paciente, Odontólogo, Fecha, Hora y Motivo son obligatorios. El sistema no guardará la cita si faltan.</div>
+    </div>
+
+    <div class="card">
+      <h3><span class="ico">🔄</span> Estados de una cita y cómo cambiarlos</h3>
+      <p style="font-size:.88rem;color:var(--g600);margin-bottom:14px">Cada cita pasa por los siguientes estados durante el día:</p>
+      <div class="estado-flow">
+        <span class="badge b-gray">Programada</span>
+        <span class="arrow">→</span>
+        <span class="badge b-blue">Confirmada</span>
+        <span class="arrow">→</span>
+        <span class="badge b-teal">En consulta</span>
+        <span class="arrow">→</span>
+        <span class="badge b-green">Completada</span>
+      </div>
+      <div style="margin-top:8px">
+        <span class="badge b-red">Cancelada</span>
+        <span style="font-size:.82rem;color:var(--g500);margin-left:8px">— Si el paciente no puede asistir</span>
+      </div>
+      <div style="margin-top:6px">
+        <span class="badge b-amber">No asistió</span>
+        <span style="font-size:.82rem;color:var(--g500);margin-left:8px">— Si el paciente no se presentó</span>
+      </div>
+      <div style="margin-top:16px;font-size:.88rem;color:var(--g700)">
+        <p style="margin-bottom:8px">Para cambiar el estado, usa los botones de acción que aparecen en la columna derecha de cada cita en la lista:</p>
+        <ul style="list-style:none;padding:0">
+          <li style="margin-bottom:5px">✅ <strong>Confirmar</strong> — el paciente confirmó su asistencia</li>
+          <li style="margin-bottom:5px">▶️ <strong>En curso</strong> — el paciente ya entró a consulta</li>
+          <li style="margin-bottom:5px">✔️ <strong>Completar</strong> — la consulta terminó</li>
+          <li style="margin-bottom:5px">✕ <strong>Cancelar</strong> — la cita se cancela</li>
+        </ul>
+      </div>
+      <div class="tip">Cuando marcas una cita como "En curso", aparecerá automáticamente en la <strong>Sala de Espera</strong> con una animación parpadeante para indicar que el paciente está en consulta.</div>
+    </div>
+
+    <div class="card">
+      <h3><span class="ico">🗓️</span> Vista de Día — Agenda por odontólogo</h3>
+      <p style="font-size:.88rem;color:var(--g600);margin-bottom:12px">La Vista Día muestra una cuadrícula con las columnas de cada odontólogo y las filas de horarios (cada 30 minutos, de 8:00 a 19:30).</p>
+      <div style="background:var(--g50);border-radius:8px;padding:14px;font-size:.82rem">
+        <div style="display:grid;grid-template-columns:60px 1fr 1fr;gap:1px;background:var(--border)">
+          <div style="background:var(--g50);padding:8px;font-weight:700;font-size:.7rem;color:var(--g500)">HORA</div>
+          <div style="background:#f0f9ff;padding:8px;font-weight:700;color:var(--primary);font-size:.78rem;text-align:center">Dr. Juan Pérez</div>
+          <div style="background:#f0f9ff;padding:8px;font-weight:700;color:var(--primary);font-size:.78rem;text-align:center">Dra. Ana Ruiz</div>
+          <div style="background:#fafafa;padding:8px;color:var(--g400);font-size:.72rem">09:00</div>
+          <div style="background:white;padding:4px">
+            <div style="background:#e0f2fe;border-left:3px solid #0369a1;border-radius:4px;padding:5px 8px;font-size:.75rem;color:#0369a1"><strong>María García</strong><br>Limpieza</div>
+          </div>
+          <div style="background:white;padding:4px"></div>
+          <div style="background:#fafafa;padding:8px;color:var(--g400);font-size:.72rem">09:30</div>
+          <div style="background:white;padding:4px"></div>
+          <div style="background:white;padding:4px">
+            <div style="background:#ccfbf1;border-left:3px solid #0d9488;border-radius:4px;padding:5px 8px;font-size:.75rem;color:#0f766e"><strong>Carlos López</strong><br>Consulta</div>
+          </div>
+        </div>
+      </div>
+      <ul style="font-size:.85rem;color:var(--g700);list-style:none;margin-top:14px">
+        <li style="margin-bottom:6px">⬅️ ➡️ Usa las flechas para cambiar de día</li>
+        <li style="margin-bottom:6px">📅 El botón <strong>"Hoy"</strong> regresa al día actual</li>
+        <li>🎨 Los colores de cada bloque indican el estado de la cita</li>
+      </ul>
+    </div>
+  </div>
+
+
+  <!-- ═══ 6. PACIENTES ═══ -->
+  <div class="section" id="s6">
+    <div class="section-header">
+      <div class="section-num">6</div>
+      <div>
+        <div class="section-title">Pacientes</div>
+        <div class="section-desc">Registro y consulta de pacientes</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3><span class="ico">👥</span> Lista de pacientes</h3>
+      <p style="font-size:.88rem;color:var(--g600);margin-bottom:12px">En la sección de Pacientes verás la lista completa de todos los pacientes registrados. Puedes buscar por nombre, folio o teléfono, y filtrar por sexo.</p>
+      <div style="background:var(--g50);border-radius:8px;padding:14px">
+        <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap">
+          <div style="flex:1;min-width:160px;background:white;border:1px solid var(--border);border-radius:6px;padding:8px 12px;font-size:.82rem;color:var(--g400)">🔍 Buscar nombre, folio o teléfono…</div>
+          <div style="background:white;border:1px solid var(--border);border-radius:6px;padding:8px 12px;font-size:.82rem;color:var(--g500)">Todos ▾</div>
+        </div>
+        <div style="background:white;border:1px solid var(--border);border-radius:6px;padding:10px 14px;display:flex;align-items:center;gap:12px;font-size:.83rem">
+          <div class="av av-blue" style="font-size:.68rem">MG</div>
+          <div style="flex:1"><strong>María García López</strong><br><span style="font-size:.72rem;color:var(--g400)">maria@email.com</span></div>
+          <span style="color:var(--g500)">32 años</span>
+          <span class="badge b-blue" style="font-size:.65rem">F</span>
+          <span style="color:var(--g500)">81-1234-5678</span>
+          <span class="badge b-red" style="font-size:.65rem">Penicilina</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3><span class="ico">➕</span> Registrar un nuevo paciente</h3>
+      <ol class="steps">
+        <li><p>Haz clic en el botón azul <strong>"+ Nuevo paciente"</strong>.</p></li>
+        <li><p>Llena el formulario con los datos de identificación: <strong>Nombre(s), Apellido paterno</strong> (obligatorios), apellido materno, fecha de nacimiento, sexo, CURP y grupo sanguíneo.</p></li>
+        <li><p>Ingresa los datos de contacto: <strong>teléfono</strong> (obligatorio), email, domicilio y colonia.</p></li>
+        <li><p>Captura los antecedentes clínicos: alergias, antecedentes hereditofamiliares, no patológicos y patológicos (requeridos por la NOM-004).</p></li>
+        <li><p>Haz clic en <strong>"Registrar"</strong>. El paciente recibirá automáticamente un número de folio único.</p></li>
+      </ol>
+      <div class="info">El folio del paciente (ej. <code style="background:var(--g100);padding:2px 6px;border-radius:4px;font-size:.8rem">PAC-001</code>) es generado automáticamente por el sistema y sirve para identificar al paciente en todo el sistema.</div>
+    </div>
+
+    <div class="card">
+      <h3><span class="ico">📋</span> Ver detalle de un paciente</h3>
+      <p style="font-size:.88rem;color:var(--g600);margin-bottom:12px">Haz clic en cualquier fila de la lista para ver el perfil completo del paciente, que incluye:</p>
+      <ul style="font-size:.88rem;color:var(--g700);list-style:none;padding:0">
+        <li style="margin-bottom:8px;display:flex;gap:8px;align-items:flex-start"><span>👤</span> Datos de identificación y contacto</li>
+        <li style="margin-bottom:8px;display:flex;gap:8px;align-items:flex-start"><span>🩺</span> Antecedentes médicos (alergias, antecedentes hereditarios y patológicos)</li>
+        <li style="margin-bottom:8px;display:flex;gap:8px;align-items:flex-start"><span>📅</span> Historial de citas recientes (últimas 8 consultas)</li>
+        <li style="display:flex;gap:8px;align-items:flex-start"><span>📂</span> Acceso rápido al expediente clínico completo</li>
+      </ul>
+      <div class="tip">Desde la vista de detalle puedes hacer clic en <strong>"Ver expediente"</strong> para acceder a las notas clínicas y recetas del paciente, o en <strong>"Nueva cita"</strong> para agendar una consulta directamente.</div>
+    </div>
+  </div>
+
+
+  <!-- ═══ 7. EXPEDIENTE ═══ -->
+  <div class="section" id="s7">
+    <div class="section-header">
+      <div class="section-num">7</div>
+      <div>
+        <div class="section-title">Expediente clínico</div>
+        <div class="section-desc">Notas SOAP, recetas y más</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3><span class="ico">📁</span> ¿Qué es el expediente?</h3>
+      <p style="font-size:.88rem;color:var(--g600)">El expediente clínico es el historial médico digital de cada paciente. Aquí el odontólogo registra todas las consultas, diagnósticos, tratamientos y medicamentos. Cumple con la <strong>NOM-004-SSA3-2012</strong>.</p>
+    </div>
+
+    <div class="card">
+      <h3><span class="ico">📝</span> Notas de evolución (formato SOAP)</h3>
+      <p style="font-size:.88rem;color:var(--g600);margin-bottom:16px">Cada consulta se documenta con una nota en formato SOAP, el estándar clínico internacional:</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">
+        <div style="background:#dbeafe;border-radius:8px;padding:14px">
+          <div style="font-size:.68rem;font-weight:700;text-transform:uppercase;color:#1e40af;margin-bottom:6px">S — Subjetivo</div>
+          <div style="font-size:.83rem;color:#1e3a5f">Lo que el paciente describe: síntomas, molestias, motivo de consulta.</div>
+        </div>
+        <div style="background:#dcfce7;border-radius:8px;padding:14px">
+          <div style="font-size:.68rem;font-weight:700;text-transform:uppercase;color:#15803d;margin-bottom:6px">O — Objetivo</div>
+          <div style="font-size:.83rem;color:#14532d">Lo que el odontólogo observa: exploración física e intraoral.</div>
+        </div>
+        <div style="background:#e0f2fe;border-radius:8px;padding:14px">
+          <div style="font-size:.68rem;font-weight:700;text-transform:uppercase;color:#0c4a6e;margin-bottom:6px">A — Diagnóstico (Assessment)</div>
+          <div style="font-size:.83rem;color:#0c4a6e">El diagnóstico con código CIE-10 cuando aplique.</div>
+        </div>
+        <div style="background:#ccfbf1;border-radius:8px;padding:14px">
+          <div style="font-size:.68rem;font-weight:700;text-transform:uppercase;color:#0f766e;margin-bottom:6px">P — Plan</div>
+          <div style="font-size:.83rem;color:#134e4a">El plan de tratamiento y procedimientos a seguir.</div>
+        </div>
+      </div>
+
+      <h4 style="font-size:.9rem;font-weight:600;color:var(--g800);margin-bottom:10px">Cómo crear una nueva nota</h4>
+      <ol class="steps">
+        <li><p>En el expediente del paciente, haz clic en el botón <strong>"+ Nueva nota"</strong>.</p></li>
+        <li><p>Opcionalmente registra los <strong>signos vitales</strong>: peso, talla (el IMC se calcula automático), temperatura, tensión arterial, etc.</p></li>
+        <li><p>Llena los cuatro campos SOAP con el <strong>motivo de consulta, exploración, diagnóstico y plan de tratamiento</strong>.</p></li>
+        <li><p>Selecciona el <strong>odontólogo</strong> que realiza la nota. Se mostrará automáticamente su número de cédula.</p></li>
+        <li><p>Haz clic en <strong>"Guardar nota"</strong>.</p></li>
+      </ol>
+    </div>
+
+    <div class="card">
+      <h3><span class="ico">💊</span> Recetas médicas</h3>
+      <p style="font-size:.88rem;color:var(--g600);margin-bottom:14px">Desde la pestaña <strong>"Recetas"</strong> del expediente puedes crear y gestionar las prescripciones del paciente.</p>
+      <h4 style="font-size:.9rem;font-weight:600;color:var(--g800);margin-bottom:10px">Cómo crear una receta</h4>
+      <ol class="steps">
+        <li><p>Haz clic en <strong>"+ Nueva receta"</strong>.</p></li>
+        <li><p>Escribe el <strong>diagnóstico</strong> asociado y selecciona el <strong>odontólogo</strong> que la prescribe.</p></li>
+        <li><p>Agrega los medicamentos haciendo clic en <strong>"+ Agregar medicamento"</strong>. Para cada uno especifica: nombre, presentación, dosis, duración y vía de administración.</p></li>
+        <li><p>Opcionalmente escribe <strong>indicaciones generales</strong> para el paciente.</p></li>
+        <li><p>Haz clic en <strong>"Guardar receta"</strong>.</p></li>
+        <li><p>Para imprimir, haz clic en el botón <strong>"Imprimir"</strong> en la receta. Se abrirá una vista de impresión profesional con membrete de la clínica.</p></li>
+      </ol>
+      <div class="tip">La receta impresa incluye: membrete de la clínica, datos del paciente, tabla de medicamentos, indicaciones y espacio para la firma del odontólogo.</div>
+    </div>
+  </div>
+
+
+  <!-- ═══ 8. SALA DE ESPERA ═══ -->
+  <div class="section" id="s8">
+    <div class="section-header">
+      <div class="section-num">8</div>
+      <div>
+        <div class="section-title">Sala de espera</div>
+        <div class="section-desc">Pantalla de turno en tiempo real</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3><span class="ico">📺</span> ¿Para qué sirve?</h3>
+      <p style="font-size:.88rem;color:var(--g600);margin-bottom:12px">La <strong>Sala de espera</strong> está diseñada para mostrarse en una TV o monitor en el área de recepción. Muestra en tiempo real quién está esperando ser atendido y quién ya está en consulta.</p>
+
+      <div style="background:#0a1628;border-radius:10px;padding:20px;color:white;font-family:sans-serif">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;border-bottom:1px solid rgba(255,255,255,.1);padding-bottom:12px">
+          <div style="font-size:1rem;font-weight:700;color:#7dd3fc">🦷 mDental</div>
+          <div style="font-size:1.1rem;font-weight:700;font-variant-numeric:tabular-nums">09:35:22</div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+          <div>
+            <div style="font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;color:#64748b;margin-bottom:10px">En espera (2)</div>
+            <div style="background:rgba(255,255,255,.05);border-radius:8px;padding:12px;margin-bottom:8px">
+              <div style="font-size:.7rem;color:#94a3b8;margin-bottom:2px">09:00 · Limpieza</div>
+              <div style="font-weight:600;font-size:.9rem">María García López</div>
+              <div style="font-size:.72rem;color:#64748b">Dr. Juan Pérez</div>
+            </div>
+            <div style="background:rgba(255,255,255,.05);border-radius:8px;padding:12px">
+              <div style="font-size:.7rem;color:#94a3b8;margin-bottom:2px">09:30 · Consulta</div>
+              <div style="font-weight:600;font-size:.9rem">Carlos López M.</div>
+              <div style="font-size:.72rem;color:#64748b">Dra. Ana Ruiz</div>
+            </div>
+          </div>
+          <div>
+            <div style="font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;color:#64748b;margin-bottom:10px">En consulta (1)</div>
+            <div style="background:rgba(13,148,136,.15);border:1px solid rgba(13,148,136,.3);border-radius:8px;padding:14px">
+              <div style="font-size:.7rem;color:#2dd4bf;margin-bottom:4px">08:30</div>
+              <div style="font-weight:700;font-size:1rem;color:#e0f2fe">Rosa Martínez H.</div>
+              <div style="font-size:.72rem;color:#94a3b8;margin:4px 0">Dr. Juan Pérez</div>
+              <div style="font-size:.7rem;background:rgba(13,148,136,.3);color:#2dd4bf;display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:20px;margin-top:4px">● En consulta</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="info" style="margin-top:14px">La pantalla se actualiza automáticamente cada 8 segundos. También se actualiza al instante cuando la recepcionista cambia el estado de una cita desde la agenda.</div>
+    </div>
+
+    <div class="card">
+      <h3><span class="ico">⚙️</span> Cómo configurarla</h3>
+      <ol class="steps">
+        <li><p>Conecta una TV o monitor al área de recepción y ábrele un navegador.</p></li>
+        <li><p>Navega a la sección <strong>"Sala de espera"</strong> desde el menú del sistema.</p></li>
+        <li><p>Presiona <kbd style="background:var(--g100);padding:2px 6px;border-radius:4px;font-size:.8rem">F11</kbd> para modo pantalla completa.</p></li>
+        <li><p>¡Listo! La pantalla se mantendrá actualizada automáticamente sin necesidad de recargar.</p></li>
+      </ol>
+      <div class="tip">No es necesario que la TV tenga sesión iniciada en el sistema. Puede mantenerse abierta todo el día.</div>
+    </div>
+  </div>
+
+
+  <!-- ═══ 9. DOCUMENTOS ═══ -->
+  <div class="section" id="s9">
+    <div class="section-header">
+      <div class="section-num">9</div>
+      <div>
+        <div class="section-title">Documentos clínicos</div>
+        <div class="section-desc">Generación e impresión de documentos legales</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3><span class="ico">📄</span> Tipos de documentos disponibles</h3>
+      <table class="manual-table">
+        <thead><tr><th>Documento</th><th>¿Para qué sirve?</th><th>¿Quién lo firma?</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><span class="badge b-blue">Consentimiento informado</span></td>
+            <td>El paciente autoriza el tratamiento dental y reconoce haber sido informado de los riesgos</td>
+            <td>Paciente, odontólogo y testigo</td>
+          </tr>
+          <tr>
+            <td><span class="badge b-red">Carta responsiva</span></td>
+            <td>El paciente acepta responsabilidad por no seguir indicaciones post-operatorias</td>
+            <td>Paciente y dos testigos</td>
+          </tr>
+          <tr>
+            <td><span class="badge b-teal">Historia clínica dental</span></td>
+            <td>Resumen completo del historial clínico del paciente conforme a NOM-004</td>
+            <td>Odontólogo y paciente</td>
+          </tr>
+          <tr>
+            <td><span class="badge b-purple">Aviso de privacidad</span></td>
+            <td>Informa al paciente sobre el uso de sus datos personales (Ley Federal de Datos)</td>
+            <td>Paciente o tutor</td>
+          </tr>
+          <tr>
+            <td><span class="badge b-amber">Autorización menores</span></td>
+            <td>Padre o tutor autoriza el tratamiento dental de un menor de edad</td>
+            <td>Padre/tutor y odontólogo</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <h3><span class="ico">🖨️</span> Cómo generar e imprimir un documento</h3>
+      <ol class="steps">
+        <li><p>En la barra de búsqueda superior, escribe el nombre del paciente y selecciónalo de la lista.</p></li>
+        <li><p>En el panel izquierdo, haz clic en el <strong>tipo de documento</strong> que necesitas generar (ej. "Consentimiento informado").</p></li>
+        <li><p>El documento aparecerá en el panel derecho, ya <strong>pre-rellenado con los datos del paciente</strong>.</p></li>
+        <li><p>Si el documento tiene campos editables (con borde punteado), puedes hacer <strong>clic sobre ellos y escribir</strong> información adicional antes de imprimir.</p></li>
+        <li><p>Haz clic en el botón <strong>"🖨️ Imprimir"</strong> en la parte superior. Se abrirá el diálogo de impresión de tu navegador.</p></li>
+        <li><p>Selecciona tu impresora o la opción "Guardar como PDF" y confirma la impresión.</p></li>
+      </ol>
+      <div class="warn">Los campos con borde punteado azul son <strong>editables antes de imprimir</strong>. Haz clic en ellos para escribir texto personalizado (ej. descripción del tratamiento en el consentimiento informado).</div>
+    </div>
+  </div>
+
+
+  <!-- ═══ 10. REPORTES ═══ -->
+  <div class="section" id="s10">
+    <div class="section-header">
+      <div class="section-num">10</div>
+      <div>
+        <div class="section-title">Reportes y estadísticas</div>
+        <div class="section-desc">Análisis del desempeño de la clínica</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3><span class="ico">📈</span> Tres tipos de reportes</h3>
+      <table class="manual-table">
+        <thead><tr><th>Reporte</th><th>¿Qué muestra?</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong>📅 Citas</strong></td>
+            <td>Total de citas, porcentaje de completadas, canceladas y no asistidas. Gráficas por médico, por tipo de consulta, por estado y por día.</td>
+          </tr>
+          <tr>
+            <td><strong>👤 Pacientes</strong></td>
+            <td>Total de pacientes activos, nuevos este mes y este año. Distribución por sexo, rango de edad, diagnósticos más frecuentes y alergias más comunes.</td>
+          </tr>
+          <tr>
+            <td><strong>👨‍⚕️ Médicos</strong></td>
+            <td>Rendimiento de cada odontólogo: total de citas, completadas, canceladas, porcentaje de asistencia, notas y recetas emitidas.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <h3><span class="ico">📊</span> Cómo usar los reportes</h3>
+      <ol class="steps">
+        <li><p>Selecciona el tipo de reporte haciendo clic en las pestañas <strong>"Citas", "Pacientes"</strong> o <strong>"Médicos"</strong>.</p></li>
+        <li><p>Para los reportes de Citas y Médicos, selecciona el <strong>rango de fechas</strong> (Desde / Hasta) y haz clic en <strong>"Consultar"</strong>.</p></li>
+        <li><p>Analiza los indicadores clave (KPIs) en las tarjetas superiores y las gráficas de barras.</p></li>
+        <li><p>Para exportar los datos, haz clic en <strong>"⬇️ Descargar Excel"</strong>. Se descargará un archivo CSV compatible con Microsoft Excel y Google Sheets.</p></li>
+      </ol>
+      <div class="tip">El reporte de Pacientes no requiere seleccionar fechas — siempre muestra el estado actual del registro de pacientes.</div>
+    </div>
+  </div>
+
+
+  <!-- ═══ 11. USUARIOS ═══ -->
+  <div class="section" id="s11">
+    <div class="section-header">
+      <div class="section-num">11</div>
+      <div>
+        <div class="section-title">Gestión de usuarios</div>
+        <div class="section-desc">Solo para administradores</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3><span class="ico">🔒</span> Acceso restringido</h3>
+      <div class="warn">Esta sección solo es visible y accesible para usuarios con el rol de <strong>Administrador</strong>. Los médicos y recepcionistas no pueden ver ni modificar los usuarios del sistema.</div>
+    </div>
+
+    <div class="card">
+      <h3><span class="ico">➕</span> Crear un nuevo usuario</h3>
+      <ol class="steps">
+        <li><p>Haz clic en <strong>"+ Nuevo usuario"</strong>.</p></li>
+        <li><p>Ingresa nombre(s), apellidos, correo electrónico y contraseña inicial.</p></li>
+        <li><p>Selecciona el <strong>rol</strong>: Administrador, Odontólogo o Recepcionista.</p></li>
+        <li><p>Si el rol es <strong>Odontólogo</strong>, aparecerán campos adicionales para capturar la especialidad y cédula profesional.</p></li>
+        <li><p>Haz clic en <strong>"Crear usuario"</strong>.</p></li>
+      </ol>
+    </div>
+
+    <div class="card">
+      <h3><span class="ico">⚙️</span> Otras acciones disponibles</h3>
+      <table class="manual-table">
+        <thead><tr><th>Acción</th><th>Descripción</th></tr></thead>
+        <tbody>
+          <tr><td>✏️ <strong>Editar</strong></td><td>Modifica el nombre, correo, rol, especialidad o cédula del usuario</td></tr>
+          <tr><td>🔑 <strong>Restablecer contraseña</strong></td><td>Establece una nueva contraseña cuando el usuario la olvidó</td></tr>
+          <tr><td>✕ <strong>Desactivar</strong></td><td>Desactiva al usuario para que no pueda iniciar sesión (sin borrar su historial)</td></tr>
+          <tr><td>✓ <strong>Activar</strong></td><td>Reactiva a un usuario que había sido desactivado</td></tr>
+        </tbody>
+      </table>
+      <div class="info">Los usuarios desactivados no pueden iniciar sesión pero su historial de citas y notas permanece en el sistema.</div>
+    </div>
+  </div>
+
+
+  <!-- ═══ 12. PERFIL ═══ -->
+  <div class="section" id="s12">
+    <div class="section-header">
+      <div class="section-num">12</div>
+      <div>
+        <div class="section-title">Perfil de usuario</div>
+        <div class="section-desc">Configura tu información personal</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3><span class="ico">👤</span> Acceder a tu perfil</h3>
+      <p style="font-size:.88rem;color:var(--g600);margin-bottom:12px">Para acceder a tu perfil, haz clic en el ícono de configuración (⚙️) que aparece junto a tu nombre en la parte inferior del menú lateral, o navega directamente a la sección <strong>"Perfil"</strong>.</p>
+      <p style="font-size:.88rem;color:var(--g600)">Desde tu perfil puedes actualizar tu nombre, correo electrónico y cambiar tu contraseña.</p>
+      <div class="tip" style="margin-top:12px">Para cambiar el modo de visualización (oscuro/claro), usa el botón de sol ☀️ / luna 🌙 en la barra superior de la aplicación.</div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- PIE DE PÁGINA -->
+  <div style="text-align:center;padding:24px 0 0;color:var(--g400);font-size:.8rem">
+    <div style="font-size:1.5rem;margin-bottom:8px">🦷</div>
+    <div style="font-weight:600;color:var(--g600);margin-bottom:4px">mDental — Sistema de Gestión Clínica</div>
+    <div>Manual de Usuario v1.0 · Todos los derechos reservados</div>
+    <div style="margin-top:6px">Para soporte técnico, contacta al administrador del sistema.</div>
+  </div>
+
+</div>
+</body>
+</html>

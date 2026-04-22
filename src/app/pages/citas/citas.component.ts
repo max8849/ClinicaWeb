@@ -57,6 +57,44 @@ import { CitaDTO, CitaCreateDTO, PacienteListDTO, UsuarioDTO } from '../../core/
       background:var(--g800); color:white; font-size:.7rem; padding:4px 8px;
       border-radius:4px; white-space:nowrap; z-index:10;
     }
+    /* ── Tarjetas móvil: vista lista ── */
+    .m-cita-card {
+      background:var(--white); border:1px solid var(--border);
+      border-radius:var(--rl); padding:14px 16px;
+    }
+    .m-cita-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; }
+    .m-cita-pac { font-weight:600; font-size:1rem; color:var(--primary); text-decoration:none; display:block; margin-bottom:3px; }
+    .m-cita-meta { font-size:.8rem; color:var(--g500); margin-bottom:8px; }
+    .m-cita-badges { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:8px; }
+    .m-cita-motivo {
+      font-size:.78rem; color:var(--g500); margin-bottom:10px;
+      white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+    }
+    .m-cita-acts {
+      display:flex; gap:6px; flex-wrap:wrap;
+      padding-top:10px; border-top:1px solid var(--border);
+    }
+    .m-cita-acts .btn { flex:1; justify-content:center; font-size:.78rem; min-height:36px; }
+    /* ── Vista día móvil: timeline ── */
+    .m-dia-list { display:none; flex-direction:column; gap:10px; }
+    .m-dia-item {
+      background:var(--white); border:1px solid var(--border);
+      border-radius:var(--rl); overflow:hidden;
+      text-decoration:none; color:inherit; display:block;
+    }
+    .m-dia-timebar {
+      display:flex; align-items:center; justify-content:space-between;
+      padding:7px 14px; background:var(--g50); border-bottom:1px solid var(--border);
+    }
+    .m-dia-hora { font-family:var(--mono); font-size:.78rem; font-weight:600; color:var(--g600); }
+    .m-dia-body { padding:12px 14px; border-left:3px solid; }
+    .m-dia-pac { font-weight:600; font-size:.9rem; color:var(--g900); margin-bottom:3px; }
+    .m-dia-doc { font-size:.75rem; color:var(--g500); margin-bottom:7px; }
+    .m-dia-tags { display:flex; gap:6px; flex-wrap:wrap; }
+    @media (max-width:640px) {
+      .dia-wrap { display:none !important; }
+      .m-dia-list { display:flex !important; }
+    }
     .combo-wrap { position:relative; }
     .combo-drop {
       position:absolute; top:calc(100% + 4px); left:0; right:0; z-index:300;
@@ -196,6 +234,46 @@ import { CitaDTO, CitaCreateDTO, PacienteListDTO, UsuarioDTO } from '../../core/
       </table>
     </div>
 
+    <!-- Vista móvil lista: tarjetas de cita -->
+    <div class="m-cards">
+      @for (c of citas; track c.id) {
+        <div class="m-cita-card">
+          <div class="m-cita-head">
+            <span class="chip">{{ c.folio }}</span>
+            <span class="badge" [ngClass]="badgeEstado(c.estado)">{{ labelEstado(c.estado) }}</span>
+          </div>
+          <a class="m-cita-pac" [routerLink]="['/pacientes', c.pacienteId]" (click)="$event.stopPropagation()">{{ c.pacienteNombre }}</a>
+          <div class="m-cita-meta">
+            {{ c.medicoNombre }} &nbsp;·&nbsp;
+            <span style="font-family:var(--mono);font-weight:600;color:var(--g700)">{{ c.hora }}</span>
+            &nbsp;·&nbsp; {{ formatFecha(c.fecha) }}
+          </div>
+          <div class="m-cita-badges">
+            <span class="badge" [ngClass]="badgeTipo(c.tipo)">{{ labelTipo(c.tipo) }}</span>
+          </div>
+          @if (c.motivo) { <div class="m-cita-motivo">{{ c.motivo }}</div> }
+          <div class="m-cita-acts">
+            @if (c.estado === 'programada') {
+              <button class="btn btn-ghost btn-sm" type="button" (click)="cambiarEstado(c, 'confirmada')" style="color:var(--success)">✓ Confirmar</button>
+            }
+            @if (c.estado === 'programada' || c.estado === 'confirmada') {
+              <button class="btn btn-ghost btn-sm" type="button" (click)="cambiarEstado(c, 'en_curso')" style="color:#0d9488;font-weight:600">▶ En curso</button>
+              <button class="btn btn-ghost btn-sm" type="button" (click)="cambiarEstado(c, 'cancelada')" style="color:var(--danger)">✕ Cancelar</button>
+            }
+            @if (c.estado === 'en_curso') {
+              <button class="btn btn-ghost btn-sm" type="button" (click)="cambiarEstado(c, 'completada')" style="color:var(--success);font-weight:600">✓ Completar</button>
+            }
+          </div>
+        </div>
+      }
+      @empty {
+        <div class="empty">
+          <div class="empty-ico"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
+          <h3>Sin citas</h3>
+        </div>
+      }
+    </div>
+
     <!-- Paginación -->
     @if (totalPaginas > 1) {
       <div style="display:flex;justify-content:center;gap:8px;margin-top:18px">
@@ -261,6 +339,32 @@ import { CitaDTO, CitaCreateDTO, PacienteListDTO, UsuarioDTO } from '../../core/
             }
 
           </div>
+        </div>
+
+        <!-- Vista día móvil: timeline vertical (sin scroll horizontal) -->
+        <div class="m-dia-list">
+          @if (citasDiaOrdenadas.length === 0) {
+            <div class="empty">
+              <div class="empty-ico"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
+              <h3>Sin citas para este día</h3>
+            </div>
+          }
+          @for (c of citasDiaOrdenadas; track c.id) {
+            <a class="m-dia-item" [routerLink]="['/pacientes', c.pacienteId]">
+              <div class="m-dia-timebar">
+                <span class="m-dia-hora">{{ c.hora }}</span>
+                <span class="badge" [ngClass]="badgeEstado(c.estado)">{{ labelEstado(c.estado) }}</span>
+              </div>
+              <div class="m-dia-body" [ngClass]="'est-' + c.estado">
+                <div class="m-dia-pac">{{ c.pacienteNombre }}</div>
+                <div class="m-dia-doc">{{ c.medicoNombre }}</div>
+                <div class="m-dia-tags">
+                  <span class="badge" [ngClass]="badgeTipo(c.tipo)" style="font-size:.7rem">{{ labelTipo(c.tipo) }}</span>
+                  @if (c.motivo) { <span class="xs muted" style="align-self:center">{{ c.motivo }}</span> }
+                </div>
+              </div>
+            </a>
+          }
         </div>
       }
     }
@@ -526,6 +630,10 @@ export class CitasComponent implements OnInit {
 
   get diaGridCols(): string {
     return '70px ' + this.medicosDelDia.map(() => '1fr').join(' ');
+  }
+
+  get citasDiaOrdenadas(): CitaDTO[] {
+    return [...this.citasDia].sort((a, b) => a.hora.localeCompare(b.hora));
   }
 
   get medicosDelDia(): { medicoId: number; medicoNombre: string; especialidad: string }[] {

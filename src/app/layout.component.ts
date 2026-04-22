@@ -229,6 +229,11 @@ import { ThemeService } from './core/services/theme.service';
     .dn-day  { background: #1e293b; color: #f8fafc; }
     /* Modo noche → botón ámbar (sol) → claro contraste sobre topbar oscuro */
     .dn-night { background: #f59e0b; color: #1c1007; }
+    /* Móvil: solo icono, sin etiqueta de texto */
+    @media (max-width: 640px) {
+      .dn-btn { padding: 8px; gap: 0; }
+      .dn-label { display: none; }
+    }
 
     /* User pill (topbar derecha) */
     .tb-user {
@@ -419,16 +424,14 @@ import { ThemeService } from './core/services/theme.service';
 
         <!-- ══ TOGGLE DÍA / NOCHE ══ -->
         @if (theme.dark()) {
-          <!-- Estás en NOCHE → botón ámbar muestra SOL → haz clic para ir a Día -->
           <button class="dn-btn dn-night" (click)="theme.toggle()" title="Cambiar a modo día">
             <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
-            Modo día
+            <span class="dn-label">Modo día</span>
           </button>
         } @else {
-          <!-- Estás en DÍA → botón oscuro muestra LUNA → haz clic para ir a Noche -->
           <button class="dn-btn dn-day" (click)="theme.toggle()" title="Cambiar a modo noche">
             <svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-            Modo noche
+            <span class="dn-label">Modo noche</span>
           </button>
         }
 
